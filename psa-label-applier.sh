@@ -7,10 +7,17 @@
 #
 # PREREQ: Populate a list of namespaces to exclude in ./exclude-namespaces.txt
 
+# global vars
 privNamespace=`cat exclude-namespaces.txt`
-
 GREEN='\033[1;32m'
 NC='\033[0m'
+
+checkPrereq() {
+    if [[ ! -f exclude-namespaces.txt ]]; then
+        echo "exclude-namespaces.txt not found, exiting..."
+        exit 1
+    fi
+}
 
 listExcludedNamespaces() {
     echo "Ignoring namespaces:"
@@ -118,7 +125,7 @@ dryRun() {
 apply() {
     for namespace in $(kubectl get namespaces | awk 'NR>1{print $1}'); do
         if [[ $privNamespace =~ $namespace ]]; then
-            echo "Skipping $namespace"
+            echo -e "${GREEN}Skipping $namespace${NC}"
         else
             echo "Applying PSA $mode $level label to $namespace"
             kubectl label --overwrite namespace $namespace pod-security.kubernetes.io/$mode=$level 
@@ -134,6 +141,7 @@ run() {
     fi
 }
 
+checkPrereq
 setMode
 setLevel
 setDryRun
