@@ -2,6 +2,7 @@
 
 # This script will find namespace yaml files without the label pod-security.kubernetes.io/audit: restricted
 # Run in namespaces/[cluster-name] folder in environments repo
+# PREREQ: requires yq tool installed: brew install yq
 
 GREEN='\033[1;32m'
 RED='\033[0;31m'
